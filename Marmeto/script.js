@@ -24,32 +24,51 @@ function showProducts(category) {
             // console.log(categoryData);
 
             // Hide all product cards
-            document.querySelectorAll('.product-card').forEach(card => {
-                card.style.display = 'block';
+            document.querySelectorAll('.product-wrapper').forEach(card => {
+                card.style.display = 'none';
             });
 
             // Show the selected product card
             console.log(`#product${category[0].toUpperCase() + category.slice(1)}`);
-            const productCard = document.querySelector(`#product${category[0].toUpperCase() + category.slice(1)}`);
-            productCard.innerHTML = ''; // Clear previous content
+
+            const productWrapper = document.querySelector(`#product${category[0].toUpperCase() + category.slice(1)}`);
+            console.log(productWrapper);
+            productWrapper.style.display = 'block';
+            productWrapper.innerHTML = ''; // Clear previous content
 
             // Display products in the selected category
+            const productCard = document.querySelector('.product-card');
+            productCard.innerHTML = '';
             console.log(categoryData);
             categoryData.category_products.forEach(product => {
                 const productDiv = document.createElement('div');
                 productDiv.classList.add('card');
                 productDiv.innerHTML = `
-                    <img src="${product.image}" alt="Product Image">
-                    <span class="badge">${product.badge_text}</span>
-                    <h3>${product.title}</h3>
-                    <p>Vendor: ${product.vendor}</p>
-                    <p>Price: $${product.price}</p>
-                    <p>Compare at Price: $${product.compare_at_price}</p>
+                    <div
+                        style="position: relative; width: 100%; overflow: hidden; height: 25rem;"
+                    >
+                        <img style="position: absolute; width: 100%; object-fit: contain;" src="${product.image}" alt="Product Image">
+                    </div>
+                    <span class="badge">${product.badge_text !== null ? product.badge_text : '' }</span>
+                    <div 
+                        style="display:flex; align-items:center; justify-content:space-between;"
+                    >
+                        <h3 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;">${product.title}</h3>
+                        <p class="big-dot">  ${product.vendor}</p>
+                    </div>
+                    <div
+                        style="display:flex; align-items:center; justify-content:space-between;"
+                    >
+                        <div style="font-weight: bold;">Rs $${product.price}</div>
+                        <div style="text-decoration: line-through; color: #444"> $${product.compare_at_price}</div>
+                        <div style="color: red"> 50% Off </div>
+                    </div>
                     <button onclick="addToCart('${category}')">Add to Cart</button>
                 `;
                 productCard.appendChild(productDiv);
             });
 
+            productWrapper.appendChild(productCard)
             // Calculate and display percentage off
             // document.querySelector(`#percentOff${category.charAt(0).toUpperCase() + category.slice(1)}`).innerText = '';
         })
